@@ -11,19 +11,23 @@ Prompt the user for the following:
 Description
 Installation - Provide stepbystep instructions for setting up development environment.
 Usage - "Provide instructions and examples for use." (screenshots?)
-Questions???
-Tests??? - "Go the extra mile and write tests for your application. Then provide examples on how to run them."
+Questions??? 
+Tests??? - This is something other than what I thought it would be.
 Prompt if Contributing License should be added (Y/N)
 
 // If then prompts?
 
-
+Things to do:
+REVIEW THE VIDEO OF CHARLIE BREEZING PAST THE ANSWERS
+Figure out the errors
+finish the readme constructor.
+figure out how to do the table of contents.
 
 Auto-populate the following:
 
 Table of Contents
 
-Contributing (BADGE)- [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](code_of_conduct.md)
+Contributing (BADGE)- [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](https://www.contributor-covenant.org/version/2/0/code_of_conduct/code_of_conduct.md)
 
 License (BADGE) (https://api.github.com/repos/${username}/${appname})
 (Add special logic for GNU GPLv3 License)

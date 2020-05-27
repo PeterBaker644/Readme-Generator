@@ -3,6 +3,7 @@ const util = require("util");
 const axios = require("axios");
 const inquirer = require("inquirer");
 const writeFileAsync = util.promisify(fs.writeFile);
+// const appendFileAsync = util.promisify(fs.appendFile);
 
 const githubPrompt = [
     {   
@@ -21,6 +22,11 @@ const githubPrompt = [
         type: "input",
         message: "Enter the name of the existing github repository",
         name: "repo"
+    },
+    {
+        type: "input",
+        message: "Enter the email address associated with your github account.",
+        name: "email"
     }
 ]
 
@@ -75,16 +81,15 @@ const readmeQuery = [
 
 const licenseQuery = [
     {
-        type: "input",
-        message: "This repository contains to license, if you'd like to an open source license to the README, specify it here:",
-        name: "contribute",
-        // transformer: function(input) {
-        //     if (input == "") {
-        //         return "No license will be included"
-        //     } else {
-        //         return input;
-        //     }
-        // }
+        type: "list",
+        message: "This repository contains no license, if you'd like to an open source license to the README, specify it here:",
+        name: "license",
+        choices: [
+            "MIT",
+            "GNU GPLv3",
+            "Leave Blank for now"
+        ],
+        filter: license => (license == "Leave Blank for now") ? none : license
     }
 ]
 
@@ -96,6 +101,27 @@ function apiQueryGithub(githubInfo) {
     return axios.get(queryUrl)
 }
 
+async function readmeGenerator(repo, content, license) {
+    let readme = "";
+    const title = (content.title || repo.name);
+    readme += `# ${title}\n`;
+    // This begins the badges section
+    if (license !== true) {
+        if (repo.license !== none) {
+            readme += `[![Generic badge](https://img.shields.io/badge/license-${license}-green.svg)](https://shields.io/)] ` 
+        }
+    } else {
+        readme += `[![GitHub license](https://img.shields.io/github/license/${repo.owner.login}/${repo.name})](https://github.com/${repo.owner.login}/${repo.name}/blob/master/LICENSE) `
+    }
+    readme += (content.contribute == true) ? `[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](https://www.contributor-covenant.org/version/2/0/code_of_conduct/code_of_conduct.md)\n` : '\n';
+    // End of the badge section. Add more here if necessary.
+    readme += `${content.description}\n`;
+    // Add the Table of Contents here.... nightmare
+    // readme += `${re}`
+    console.log(readme);
+    return readme;
+}
+
 async function readmePrompts() {
     try {
         console.log(`\nWelcome to the automated CLI readme generator!\nPlease enter Github information as accurately as possible.\n`)
@@ -104,14 +130,14 @@ async function readmePrompts() {
         const repoInfo = apiResponse.data;
         console.log(`Any answers left blank will omit sections from the final readme unless otherwise specified`)
         const readmeInfo = await userPrompt(readmeQuery);
-        if (repoInfo.license == null) {
-            const licenseReponse = await userPrompt(licenseQuery)
-        }
-        const readmeBody = readmeGenerator(repoInfo, readmeInfo);
-        await writeFileAsync("readme.md", readmeBody);
+        const licenseResponse = (repoInfo.license !== null) 
+            ? true 
+            : await userPrompt(licenseQuery);
+        const readmeBody = await readmeGenerator(repoInfo, readmeInfo, licenseResponse);
+        await writeFileAsync("test.md", readmeBody);
 
     } catch (err) {
-        if (err.response.status == 404) {
+        if (err.response.status) {
             console.log("You have entered invalid GitHub information. No valid user or repository could be found by that name.")
         } else {console.log(err)}
     }
