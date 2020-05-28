@@ -9,7 +9,7 @@ This command line based readme generator prompts the user for information using 
 After cloning the repository to your computer, navigate to the folder with your terminal and run `npm install`.
 
 ## Usage
-Using the commandline of your choice with node installed, run `node index.js` and follow the instructions. A repository must be created before the generator can properly run.
+Using the commandline of your choice with node installed, run `node index.js` and follow the instructions. A GitHub repository must be created before the generator can properly run.
 
 ## License
 This repository uses an open-source license. Please check the readme badges or refer to the license documentation in the repository for more information.
