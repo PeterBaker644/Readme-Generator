@@ -1,4 +1,3 @@
-<img src="https://avatars1.githubusercontent.com/u/61387901?v=4" alt="Github Avatar" width="150" align="right" />
 
 # CLI Readme Generator
 
@@ -35,6 +34,3 @@ Please note that this project is released with a Contributor Code of Conduct. By
 
 ## User Info
 This project was authored by PeterBaker644.
-You can contact them here to report any issues: <a href="mailto:baker644@umn.edu">Report Issues</a>
-
-Don't use github for issues that would be dumb. Also please send all the junk mail.
