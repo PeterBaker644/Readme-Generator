@@ -5,20 +5,6 @@
 
 This command line based readme generator prompts the user for information using the command line and assembles a markdown file given the github information and user response. It's important to note that a repository must be made ahead of time so the generator can read user and project information. It includes imporant sections such as a dynamically created table of content, installation instructions, readme badges, and dynamic licensing.
 
-<details>
-<summary>Table of Contents</summary>
-
-## Table of Contents
-* Title
-* Description
-* [Installation](#installation)
-* [Usage](#usage)
-* [License](#license)
-* [Contributing](#contributing)
-* [User Info](#user-info)
-
-</details>
-
 ## Installation
 Using your terminal run `npm install` and then `node index.js`.  
 
@@ -31,6 +17,3 @@ This repository uses an open-source license. Please check the readme badges or r
 ## Contributing
 
 Please note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by its terms.
-
-## User Info
-This project was authored by PeterBaker644.
