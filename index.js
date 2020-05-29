@@ -4,6 +4,7 @@ const axios = require("axios");
 const inquirer = require("inquirer");
 const writeFileAsync = util.promisify(fs.writeFile);
 
+//Inquirer prompt arrays
 const githubPrompt = [
     {   
         type: "input",
@@ -24,7 +25,7 @@ const githubPrompt = [
     }
 ]
 
-const readmeQuery = [
+const readmePrompt = [
     {
         type: "input",
         message: "Enter the email address associated with your github account.",
@@ -46,13 +47,6 @@ const readmeQuery = [
         type: "input",
         message: "Provide any installation steps required for your project by the user:",
         name: "installation",
-        // transformer: function(input) {
-        //     if (input == "") {
-        //         return "Installation information will not be included."
-        //     } else {
-        //         return input;
-        //     }
-        // }
     },
     {
         type: "input",
@@ -70,13 +64,11 @@ const readmeQuery = [
         type: "input",
         message: "Provide any instructions or steps for usage of your project:",
         name: "usage",
-        // transformer: function(input) {
-        //     if (input == "") {
-        //         return "Usage information will not be included."
-        //     } else {
-        //         return input;
-        //     }
-        // }
+    },
+    {
+        type: "input",
+        message: "What command (if any) should be run to run tests:",
+        name: "test",
     },
     {
         type: "confirm",
@@ -85,7 +77,7 @@ const readmeQuery = [
     },
 ]
 
-const licenseQuery = [
+const licensePrompt = [
     {
         type: "list",
         message: "This repository contains no license, if you'd like to an open source license to the README, specify it here:",
@@ -110,69 +102,81 @@ const licenseQuery = [
 
 function userPrompt(prompt) {return inquirer.prompt(prompt);}
 
+//Axios github query
 function apiQueryGithub(githubInfo) {
     const { username, repo } = githubInfo;
-    const queryUrl = `https://api.github.com/repos/${username}/${repo}`
-    return axios.get(queryUrl)
+    const queryUrl = `https://api.github.com/repos/${username}/${repo}`;
+    return axios.get(queryUrl);
 }
 
+//Dynamically generated table of contents
 function generateToc(repo, content, license) {
-    let toc = `<details>\n<summary>Table of Contents</summary>\n\n## Table of Contents\n* Title\n* Description\n`
+    let toc = `<details>\n<summary>Table of Contents</summary>\n\n## Table of Contents\n* Title\n* Description\n`;
     toc += content.installation ? `* [Installation](#installation)\n` : '';
     toc += content.usage ? `* [Usage](#usage)\n` : '';
     toc += (repo.license !== "none" || license.license !== "none") ? `* [License](#license)\n` : '';
     toc += content.contribute ? `* [Contributing](#contributing)\n` : '';
     toc += content.test ? `* [Tests](#tests)\n` : '';
-    toc += `* [User Info](#user-info)\n\n</details>`
+    toc += `* [User Info](#user-info)\n\n</details>`;
     return toc;
 }
 
+//Readme assembler
 async function readmeGenerator(repo, content, license) {
     try {
         let readme = "";
-        readme += `<img src="${repo.owner.avatar_url}" alt="Github Avatar" width="150" align="right" />\n\n`
+        //User Avatar
+        readme += `<img src="${repo.owner.avatar_url}" alt="Github Avatar" width="150" align="right" />\n\n`;
+        //Title
         const title = (content.title || repo.name);
         readme += `# ${title}\n\n`;
-        // This begins the badges section
+        // Append readme badges
         if (license !== true) {
             if (repo.license !== "none") {
-                readme += `[![Generic badge](https://img.shields.io/badge/license-${license.license}-green.svg)](https://shields.io/) ` 
+                readme += `[![Generic badge](https://img.shields.io/badge/license-${license.license}-green.svg)](https://shields.io/) `;
             }
         } else {
-            readme += `[![GitHub license](https://img.shields.io/github/license/${repo.owner.login}/${repo.name})](https://github.com/${repo.owner.login}/${repo.name}/blob/master/LICENSE) `
+            readme += `[![GitHub license](https://img.shields.io/github/license/${repo.owner.login}/${repo.name})](https://github.com/${repo.owner.login}/${repo.name}/blob/master/LICENSE) `;
         }
         readme += (content.contribute == true) ? `[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](https://www.contributor-covenant.org/version/2/0/code_of_conduct/code_of_conduct.md)\n\n` : '\n\n';
-        // End of the badge section. Add more here if necessary.
-        // Could make description sync with github, but the default description is usually dumb.
+        //Description
         readme += `${content.description}\n\n`;
+        //Test link (if available)
         readme += repo.homepage ? `Test out the project here: [${repo.name}](${repo.homepage})\n\n` : '';
+        //Table of Contents
         readme += `${generateToc(repo, content, license)}\n\n`;
+        //Installation (if included)
         readme += content.installation ? `## Installation\n${content.installation}\n\n` : '';
+        //Usage (if included)
         readme += content.usage ? `## Usage\n${content.usage}\n\n` : '';
+        //License (if included)
         readme += (repo.license !== "none" || license.license !== "none") ? `## License\nThis repository uses an open-source license. Please check the readme badges or refer to the license documentation in the repository for more information.\n\n` : '';
+        //Contribution (if included)
         readme += content.contribute ? `## Contributing\n\nPlease note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by its terms.\n\n` : '';
-        // Fix this in the future vvv
-        readme += content.test ? `${content.test}\n\n` : '';
+        //Testing (if included)
+        readme += content.test ? `## Testing\n\nTo test this project, run the following commands:\n${content.test}` : '';
+        //User Info
         readme += `## User Info\nThis project was authored by ${repo.owner.login}.\nYou can contact them here to report any issues: <a href="mailto:${content.email}">Report Issues</a>\n\nDon't use github for issues that would be dumb. Also please send all the junk mail.`
-        console.log(readme);
         return readme;
     } catch(err) {
         console.log(err);
     }
 }
 
+//Main function
 async function readmeInit() {
     try {
         console.log(`\nWelcome to the automated CLI readme generator!\nPlease enter Github information as accurately as possible.\nAny answers left blank will omit sections from the final readme unless otherwise specified.\n`);
         const github = await userPrompt(githubPrompt);    
         const apiResponse = await apiQueryGithub(github);
         const repoInfo = apiResponse.data;
-        const readmeInfo = await userPrompt(readmeQuery);
+        const readmeInfo = await userPrompt(readmePrompt);
         const licenseResponse = (repoInfo.license !== null) 
             ? true 
-            : await userPrompt(licenseQuery);
+            : await userPrompt(licensePrompt);
         const readmeBody = await readmeGenerator(repoInfo, readmeInfo, licenseResponse, github);
-        await writeFileAsync("test.md", readmeBody);
+        await writeFileAsync(`${repoInfo.name}_README.md`, readmeBody);
+        console.log(`${repoInfo.name}_README.md has been successfully generated!`)
 
     } catch (err) {
         if (err.response.status) {

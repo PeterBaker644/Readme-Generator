@@ -1,42 +1,15 @@
-require axios
-require inquirer
 
-
-Prompt the user for the following:
-
-\\Github username
-\\Github repo name
-
-
-Description
-Installation - Provide stepbystep instructions for setting up development environment.
-Usage - "Provide instructions and examples for use." (screenshots?)
-Questions??? 
 Tests??? - This is something other than what I thought it would be.
 Prompt if Contributing License should be added (Y/N)
 
-// If then prompts?
-
 Things to do:
 REVIEW THE VIDEO OF CHARLIE BREEZING PAST THE ANSWERS
-Figure out the errors
+
 finish the readme constructor.
 figure out how to do the table of contents.
 
-Auto-populate the following:
+Review the recording footage. We talk about npm test in class today, so I'll have the answers to finish things.
 
-Table of Contents
+///////Instruct the user to clone the repo in order to run it.
 
-Contributing (BADGE)- [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](https://www.contributor-covenant.org/version/2/0/code_of_conduct/code_of_conduct.md)
-
-License (BADGE) (https://api.github.com/repos/${username}/${appname})
-(Add special logic for GNU GPLv3 License)
-User profile picture and email??? https://api.github.com/users/${username}
-
-`<details>
-<summary>Table of contents</summary>
-
-## Table of contents
-   * This is just a test
-
-</details>`
+Add screenshots to the readme.
