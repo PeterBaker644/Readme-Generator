@@ -17,3 +17,7 @@ This repository uses an open-source license. Please check the readme badges or r
 ## Contributing
 
 Please note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by its terms.
+
+## Screenshots
+
+![Screenshot of the CLI](https://raw.githubusercontent.com/PeterBaker644/Readme-Generator/master/screenshots/screenshot-1.png)
