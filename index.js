@@ -73,14 +73,15 @@ const readmePrompt = [
     {
         type: "confirm",
         message: "Would you like to include CCv2 licensing on this project?",
-        name: "contribute"
+        name: "contribute",
+        default: false
     },
 ]
 
 const licensePrompt = [
     {
         type: "list",
-        message: "This repository contains no license, if you'd like to an open source license to the README, specify it here:",
+        message: "This repository contains no license. If you'd like to add an open source license to the README, specify it here:",
         name: "license",
         choices: [
             "MIT",
@@ -116,7 +117,7 @@ function generateToc(repo, content, license) {
     toc += content.usage ? `* [Usage](#usage)\n` : '';
     toc += (repo.license !== "none" || license.license !== "none") ? `* [License](#license)\n` : '';
     toc += content.contribute ? `* [Contributing](#contributing)\n` : '';
-    toc += content.test ? `* [Tests](#tests)\n` : '';
+    toc += content.test ? `* [Testing](#testing)\n` : '';
     toc += `* [User Info](#user-info)\n\n</details>`;
     return toc;
 }
@@ -176,7 +177,7 @@ async function readmeInit() {
             : await userPrompt(licensePrompt);
         const readmeBody = await readmeGenerator(repoInfo, readmeInfo, licenseResponse, github);
         await writeFileAsync(`${repoInfo.name}_README.md`, readmeBody);
-        console.log(`${repoInfo.name}_README.md has been successfully generated!`)
+        console.log(`\n${repoInfo.name}_README.md has been successfully generated!`)
 
     } catch (err) {
         if (err.response.status) {
