@@ -5,6 +5,13 @@
 
 This command line based readme generator prompts the user for information using the command line and assembles a markdown file given the github information and user response. It's important to note that a repository must be made ahead of time so the generator can read user and project information. It includes imporant sections such as a dynamically created table of content, installation instructions, readme badges, and dynamic licensing.
 
+## User Story
+```
+AS A developer
+I WANT a README generator
+SO THAT I can easily put together a good README for a new project
+```
+
 ## Installation
 After cloning the repository to your computer, navigate to the folder with your terminal and run `npm install`.
 
