@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/PeterBaker644/Readme-Generator#readme",
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "inquirer": "^6.5.0"
   }
 }
